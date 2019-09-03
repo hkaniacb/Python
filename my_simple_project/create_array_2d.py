@@ -1,6 +1,6 @@
 m = 4
 foo = 0
-list_2d = [[foo for i in range(4)] for j in range(4)]
+list_2d = [[foo for i in range(4)] for j in range(4)] #Tworzenie tablicy listy 
 counter = 0
 for x in range(m):
     for y in range(m):
@@ -10,3 +10,5 @@ for x in range(m):
     print("")
 
 print(list_2d)
+
+
