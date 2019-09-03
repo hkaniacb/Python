@@ -25,7 +25,7 @@ def add_task(): # Dodowanie zadań do kolejki
             print("qqloop", queue_task.qsize())
             return queue_task
 
-def delay():
+def delay(): # Fukncja do opóźnienia 
     timer2 = time.time()
     while True:
         if time.time() - timer2 > 5:
@@ -43,7 +43,7 @@ schedule.every().day.at("12:06").do(job)
 def choose_project_queue(choose_project):
     if choose_project == 1:
         shutil.copy('D:/conf/FirstProject/RTClient.exe.config',
-                    'C:Users/huber/AppData/Roaming/Nice_Systems/Real-Time/RTClient.exe.config')
+                    'C:Users/huber/AppData/Roaming/Nice_Systems/Real-Time/RTClient.exe.config') # kopiowanie pliku config z odpowiednim projektem 
     elif choose_project == 2:
         shutil.copy('D:/conf/SecondProject/RTClient.exe.config',
                     'C:Users/huber/AppData/Roaming/Nice_Systems/Real-Time/RTClient.exe.config')
@@ -87,7 +87,7 @@ while True:
 while True:
     command = shlex.split("tasklist")
     process = subprocess.Popen(command, stdout=subprocess.PIPE)
-    output, err = process.communicate()
+    output, err = process.communicate() # pobierania instniejące procesy na komputerze 
     print(str(output).count("RTClient"))
     print(queue_task_main.empty())
     if str(output).count("RTClient") == 0 and queue_task_main.empty() == True :
