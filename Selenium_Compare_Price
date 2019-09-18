@@ -1,0 +1,127 @@
+import xlrd
+from pandas import *
+from openpyxl import Workbook
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+import sys, time, random, traceback
+import datetime
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import requests
+import bs4
+
+
+class ceneo:
+
+    def __init__(self, product, link): # Konstruktor stworzenie przeglądarki
+
+        self.product = product # inicjalizacja zmiennej w konstruktorze
+        self.driver = webdriver.Chrome() #
+        self.driver.get(link) # otwarcie webdriveru (strony internetowej)
+        self.driver.maximize_window() # maxymalizacja przeglądarki
+    def delayForBrowser(self, delay=3000):
+         time.sleep(delay/1000.00)
+
+    def search_product(self, xPath_textBox_search, xPath_button_search, xPath_lista_wynikow): # znajdz produkt na ceneo
+        self.delayForBrowser() # opóźnienie
+        browser = self.driver # przekazanie browser zmiennej webdrivera , zeby łatwiej pracować na funkcji
+        textBox_search = browser.find_element_by_xpath(xPath_textBox_search)  # lokalizacja obiektu textbox i przekazanie go do zmiennej
+        textBox_search.clear() # wyczyść pole tekstowe
+        textBox_search.send_keys(self.product) # wpisz w polw wartość pobraną z obiektu, (jak nazywa się produkt )
+        self.delayForBrowser(1000) # opóźnienie 1 sek
+        #textBox_search.send_keys(Keys.RETURN) # wciśniecię Enter w obiekcie textbox_search
+        button_search = browser.find_element_by_xpath(xPath_button_search) # lokalizacja obeiktu button i przekazanie go do zmiennej
+        button_search.click()
+       # wait = WebDriverWait(browser, 10)
+        #wait.until(EC.invisibility_of_element_located((By.XPATH, "//div[@class='js_category-list-body']")))
+        #element = WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.XPATH, "//div[@class='js_category-list-body']")))
+
+        self.delayForBrowser()
+        #wartosc =  browser.find_element_by_xpath("//div[contains(@class, 'js_category-list-body')]").get_attribute('href')
+        return browser.find_element_by_xpath(xPath_lista_wynikow).get_attribute('href')
+
+        #browser.find_element_by_xpath("//div[contains(@class, 'js_category-list-body')]").click()
+
+    def parse_htlm_ceneo(self,url):
+        search_url = 'https://www.ceneo.pl/51555235'
+
+        result = requests.get(url)
+
+        cars_html_data = bs4.BeautifulSoup(result.text, features="lxml")  # pobranie całego html
+        current_page = cars_html_data
+
+        cars_search_page = current_page.select("tr.product-offer")
+
+        # print(cars_search_page)
+        for car_item in cars_search_page:
+            price = car_item.find('span', class_='price').text.strip()
+            name_product = car_item.find('span', class_='short-name__txt').text.strip()
+            nazwa = car_item.find('img')['alt']
+            print(price, name_product, nazwa)
+
+
+    #def
+    # def close(self):
+    #     self.driver.close()
+    #
+
+    #
+    # def destroyBrowser(self):
+    #     self.driver.close()
+    #
+    # def Click_XPath(self, xpath):
+    #     self.delayForBrowser()
+    #     driver = self.driver
+    #     driver.find_element_by_xpath(xpath).click()
+    #     self.delayForBrowser()
+    #
+    # def Input_Text(self, xpath, value):
+    #     driver = self.driver
+    #     searchKlient = driver.find_element_by_xpath(xpath)
+    #     searchKlient.clear()
+    #     searchKlient.send_keys(value)
+    #     self.delayForBrowser()
+    #     searchKlient.send_keys(Keys.RETURN)
+    #
+    # def clean_text(s):
+    #     return s.strip().replace("\n", "").replace("\r", "").replace(" ", "")
+    #
+    # def loopwhile(self,tmpboolean,xpath):
+    #     while tmpboolean == False:
+    #         tmpboolean = self.check_exists_by_xpath(xpath)
+    #         # f = open("demofile2.txt", "a")
+    #         # f.write(str("tmp"+tmpboolean))
+    #         # f.close()
+    #         if (tmpboolean == True):
+    #             # f = open("demofile2.txt", "a")
+    #             # f.write(str("tmp" + tmpboolean))
+    #             # f.close()
+    #             tmpboolean=True
+    #
+    # def check_exists_by_xpath(self,xpath):
+    #     try:
+    #         driver = self.driver
+    #         driver.find_element_by_xpath(xpath)
+    #         # f = open("demofile2.txt", "a")
+    #         # f.write("False")
+    #         # f.close()
+    #     except NoSuchElementException:
+    #         return False
+    #     return True
+
+if __name__ == "__main__":
+
+    # konfingi przetrzymujące wszystkie xPath   
+    config = {
+  "xpath_textbox_search": "//input[@name='search-query']",
+  "xpath_button_search": "//span[@class='search-icon']",
+  "xpath_lista_wynikow": "//a[contains(@class, 'js_clickHash js_seoUrl product-link go-to-product')]"
+}
+
+
+    cena = ceneo("dell inspiron 15 ", "https://www.ceneo.pl/" )
+    link_ceneo = cena.search_product(config['xpath_textbox_search'], config['xpath_button_search'], config['xpath_lista_wynikow'])
+    print(link_ceneo)
+    cena.parse_htlm_ceneo(link_ceneo)
