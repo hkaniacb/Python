@@ -22,3 +22,8 @@ for car_item in cars_search_page:
     name_product = car_item.find('span', class_='short-name__txt').text.strip()
     nazwa = car_item.find('img')['alt']
     print(price, name_product,nazwa)
+
+    # splitowanie stringa i wrzucenie go listy 
+nr_produktu = "https://www.ceneo.pl/20718474".split('/')
+nr_last_item = len(nr_produktu)-1 # odwołanie się na ostaniegi elementu listy 
+print(nr_produktu[nr_last_item]) # wyświetlenie ostani element listy 
