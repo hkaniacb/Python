@@ -1,3 +1,46 @@
+#Najnowsza wersja działania na Excelu 06.10.2019
+import openpyxl
+import os.path as op
+from datetime import date
+class ExcelPrice:
+
+    def __init__(self, path_excel):  # Konstruktor sprawdza czy insteje workbook o podanej lokalizacji jeśli nie ma to go tworzy
+        self.name_workbook_clss= path_excel
+        if op.exists(path_excel): # warunek sprawdzjący czy istnieje pilk
+            print('Exist workbook ' + path_excel)
+            self.wb = openpyxl.load_workbook(path_excel)  # Załaduj istniejący plik
+        else:
+            print('Create workbook ')
+            self.wb =  openpyxl.Workbook()
+
+    def check_exist_sheet(self, s): # Sprawdza czy istnieje arkusz dla danego workbooka
+        # Sprawdza czy istanieje arkusz i tworzy jeśli nei
+        if s in self.wb.sheetnames:
+            print('Exist sheet ' + s)
+            self.ws = self.wb[s]
+        else:
+            print('Create Sheet ' + s)
+            self.ws = self.wb.create_sheet(s, 0)
+            self.ws.append(['Data','Nazwa Portalu', 'Cena','Nazwa Produktu', 'Nazwa Firmy ' ])
+
+    def append_row(self, lista_parameters):
+        # Dodaje wiersz
+        temp_param = [date.today()]
+        for item in lista_parameters:
+            temp_param.append(item)
+
+        self.ws.append(temp_param) #Dodanie rekordu do excela
+        self.wb.save(self.name_workbook_clss) # Zapisuje Workbook
+
+name_workbook1 = "dataOutput/Hubert_Test1.xlsx"
+myExel = ExcelPrice(name_workbook1)
+myExel.check_exist_sheet("Hubert")
+print(type(["Test", "test2"]))
+x = ["Test", "test2"]
+myExel.append_row(x)
+
+
+# strasze wersje działania na Excelu 
 import openpyxl
 from datetime import date
 import os.path as op
