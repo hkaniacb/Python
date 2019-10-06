@@ -1,0 +1,3 @@
+#skrypt do uzupełniania pola po rozpoznalnego po nazwie label 
+
+document.evaluate('//label[text()="First Name"]',document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.parentElement.getElementsByTagName("input")[0].value= "Hubert";
