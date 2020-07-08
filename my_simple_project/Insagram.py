@@ -64,8 +64,8 @@ class InstagramLike():
          time.sleep(delay/1000)
 
 
-user="mican9292"
-pswd="admin1234pl%%"
+user="xxx"
+pswd="xxx"
 hashtags="""#girls #boys"""
 print(hashtags.strip())
 lista=[x.strip() for x in hashtags.split("#")]
